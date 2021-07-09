@@ -105,6 +105,7 @@ spec:
 {{- end }}
         readinessProbe:
 {{ toYaml .Values.readinessProbe | indent 10 }}
+{{- if not (or (or .Values.readinessProbe.exec .Values.readinessProbe.tcpSocket) .Values.readinessProbe.httpGet)}}
           exec:
             command:
               - sh
@@ -134,6 +135,7 @@ spec:
                 }
 
                 http "{{ .Values.healthCheckPath }}"
+{{- end }}
         ports:
         - containerPort: {{ .Values.httpPort }}
 {{- if .Values.lifecycle }}
